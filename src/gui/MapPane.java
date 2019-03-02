@@ -78,17 +78,6 @@ public class MapPane extends TabPane implements MapComponentInitializedListener,
 		mapView.addMapInitializedListener(this);
 	}
 	
-	/*public void displayPlan(ArrayList<String> orderedAddresses, ArrayList<TravelMode> travelModes) {
-		for (int i = 0; i < orderedAddresses.size()-1; ++i) {
-			DirectionsRequest dirReq = new DirectionsRequest(orderedAddresses.get(i), orderedAddresses.get(i+1), convertFromGGTravelMode(travelModes.get(i)));
-			directionsService.getRoute(dirReq, this, new DirectionsRenderer(true, mapView.getMap(), directionsPane));
-			//MarkerOptions markerOptions = new MarkerOptions();
-			//markerOptions.
-			//Marker m = new Marker(markerOptions);
-        }
-		
-	}*/
-	
 	private void addMarkers(ArrayList<Place> orderedPlaces) {
 		final String labels[] = {"A", "B", "C", "D", "E", "F", "G"};
 		for (int i = 0; i < orderedPlaces.size(); ++i) {
@@ -101,8 +90,6 @@ public class MapPane extends TabPane implements MapComponentInitializedListener,
 	}
 	
 	public void displayPlan(ArrayList<Place> orderedPlaces, ArrayList<TravelMode> travelModes) {
-		//addMarkers(orderedPlaces);
-		ArrayList<DirectionsRequest>dirRequests = new ArrayList<DirectionsRequest>();
 		for (int i = 0; i < orderedPlaces.size()-1; ++i) {
 			String latlongOrigin = orderedPlaces.get(i).getCoordinate().getLatitude() +
 								   	", " +
@@ -110,25 +97,15 @@ public class MapPane extends TabPane implements MapComponentInitializedListener,
 			String latlongDestination = orderedPlaces.get(i+1).getCoordinate().getLatitude() +
 									   	", " +
 									   	orderedPlaces.get(i+1).getCoordinate().getLongitude();
-			//DirectionsRequest dirReq = new DirectionsRequest(latlongOrigin,
-			//												 latlongDestination,
-			//												convertFromGGTravelMode(travelModes.get(i)));
-			//DirectionsRequest dirReq = new DirectionsRequest(orderedPlaces.get(i).getAddress(),
-			//												 orderedPlaces.get(i+1).getAddress(),
-			//												 convertFromGGTravelMode(travelModes.get(i)));
-			dirRequests.add(new DirectionsRequest(latlongOrigin,
-											  	  latlongDestination,
-												  convertFromGGTravelMode(travelModes.get(i)),
-												  false));
+			DirectionsRequest dirReq = new DirectionsRequest(latlongOrigin,
+															 latlongDestination,
+															 convertFromGGTravelMode(travelModes.get(i)),
+															 false);
 
-			//DirectionsRenderer dirRenderer = new DirectionsRenderer(true, map, mapView.getDirec());
-			//directionsService.getRoute(dirReq, this, dirRenderer);
-        }
-		for (DirectionsRequest dr : dirRequests) {
 			DirectionsRenderer dirRenderer = new DirectionsRenderer(true, map, mapView.getDirec());
-			directionsService.getRoute(dr, this, dirRenderer);
-		}
-		map.clearMarkers();
+			dirRenderer.setSuppressMarkers(true);
+			directionsService.getRoute(dirReq, this, dirRenderer);
+        }
 		addMarkers(orderedPlaces);
 	}
 
@@ -151,7 +128,6 @@ public class MapPane extends TabPane implements MapComponentInitializedListener,
 	@Override
 	public void directionsReceived(DirectionsResult arg0, DirectionStatus arg1) {
 		// TODO Auto-generated method stub
-		//map.clearMarkers();
 	}
 	
 	public void setupJSAlerts(WebView webView) {

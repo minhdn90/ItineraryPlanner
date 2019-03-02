@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import com.google.maps.*;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
+import com.google.maps.model.PlaceDetails;
 import com.google.maps.model.PlacesSearchResponse;
 import com.google.maps.model.PlacesSearchResult;
 import com.lynden.gmapsfx.javascript.object.LatLong;
@@ -45,13 +46,13 @@ public class Place {
 			PlacesSearchResponse rsp = searchRequest.await();
 			PlacesSearchResult resultPlace = rsp.results[0];
 			placeID = resultPlace.placeId;
-			address = resultPlace.formattedAddress;
-			GeocodingApiRequest geocodeRequest = GeocodingApi.geocode(contextBuilder.build(),
-																	address);
-			GeocodingResult[] geocodeResults = geocodeRequest.await();
-			coordinate = new LatLong(geocodeResults[0].geometry.location.lat,
-										geocodeResults[0].geometry.location.lng);
-			name = resultPlace.name;
+			PlaceDetailsRequest placeDetailsRequest = new PlaceDetailsRequest(contextBuilder.build());
+			placeDetailsRequest.placeId(placeID);
+			PlaceDetails details = placeDetailsRequest.await();
+			address = details.formattedAddress;
+			name = details.name;
+			coordinate = new LatLong(details.geometry.location.lat,
+									 details.geometry.location.lng);
 			/*if(resultPlace.openingHours != null)
 				timeOpen = resultPlace.openingHours.periods[0].open.time;
 			if(resultPlace.openingHours != null)
