@@ -4,9 +4,11 @@ import static java.nio.file.Files.readAllBytes;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import com.google.maps.*;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PlaceDetailsRequest;
+import com.google.maps.TextSearchRequest;
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.GeocodingResult;
+import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceDetails;
 import com.google.maps.model.PlacesSearchResponse;
 import com.google.maps.model.PlacesSearchResult;
@@ -20,6 +22,9 @@ public class Place {
 		return name;
 	}
 	private String placeID;
+	public String getPlaceID() {
+		return placeID;
+	}
 	private String address;
 	public String getAddress() {
 		return address;
@@ -51,6 +56,7 @@ public class Place {
 			PlaceDetails details = placeDetailsRequest.await();
 			address = details.formattedAddress;
 			name = details.name;
+			//coordinate = details.geometry.location;
 			coordinate = new LatLong(details.geometry.location.lat,
 									 details.geometry.location.lng);
 			/*if(resultPlace.openingHours != null)

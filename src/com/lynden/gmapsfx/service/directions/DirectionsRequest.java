@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 package com.lynden.gmapsfx.service.directions;
-
 import com.lynden.gmapsfx.javascript.JavascriptObject;
 import com.lynden.gmapsfx.javascript.object.GMapObjectType;
+import com.lynden.gmapsfx.javascript.object.GPlace;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +101,7 @@ public class DirectionsRequest extends JavascriptObject{
         }
         if (addressOrigin == null && latLongOrigin != null) {
             something = true;
-            builder.append("origin: '").append(latLongOrigin.getVariableName()).append("'");
+            builder.append("origin: ").append(latLongOrigin.getVariableName()).append("");
         }
         if (addressDestination != null && latLongDestination == null) {
             builder.append(something ? "," : "");
@@ -109,7 +109,7 @@ public class DirectionsRequest extends JavascriptObject{
         }
         if (addressDestination == null && latLongDestination != null) {
             builder.append(something ? "," : "");
-            builder.append("destination: '").append(latLongDestination.getVariableName()).append("'");
+            builder.append("destination: ").append(latLongDestination.getVariableName()).append("");
         }
         if (travelmode != null) {
             builder.append(something ? "," : "");
@@ -140,7 +140,7 @@ public class DirectionsRequest extends JavascriptObject{
             builder.append("]");
         }
         builder.append("}");
-        LOG.trace("REQUEST " + builder.toString());
+        LOG.info("REQUEST " + builder.toString());
         return builder.toString();
     }
 

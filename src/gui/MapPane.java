@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import com.google.maps.model.Duration;
+import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
@@ -91,17 +92,12 @@ public class MapPane extends TabPane implements MapComponentInitializedListener,
 	
 	public void displayPlan(ArrayList<Place> orderedPlaces, ArrayList<TravelMode> travelModes) {
 		for (int i = 0; i < orderedPlaces.size()-1; ++i) {
-			String latlongOrigin = orderedPlaces.get(i).getCoordinate().getLatitude() +
-								   	", " +
-								   	orderedPlaces.get(i).getCoordinate().getLongitude();
-			String latlongDestination = orderedPlaces.get(i+1).getCoordinate().getLatitude() +
-									   	", " +
-									   	orderedPlaces.get(i+1).getCoordinate().getLongitude();
+			LatLong latlongOrigin = orderedPlaces.get(i).getCoordinate();
+			LatLong latlongDestination = orderedPlaces.get(i+1).getCoordinate();
 			DirectionsRequest dirReq = new DirectionsRequest(latlongOrigin,
 															 latlongDestination,
 															 convertFromGGTravelMode(travelModes.get(i)),
 															 false);
-
 			DirectionsRenderer dirRenderer = new DirectionsRenderer(true, map, mapView.getDirec());
 			dirRenderer.setSuppressMarkers(true);
 			directionsService.getRoute(dirReq, this, dirRenderer);

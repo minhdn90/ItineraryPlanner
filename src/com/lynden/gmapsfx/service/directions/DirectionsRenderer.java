@@ -91,6 +91,10 @@ public class DirectionsRenderer extends JavascriptObject{
 	public void setSuppressMarkers(boolean suppressMarkers) {
 		getJSObject().eval(getVariableName()+".setOptions({suppressMarkers:" +suppressMarkers+"});");
 	}
+	
+	/*public void setDirections(DirectionsResult res) {
+		getJSObject().eval(getVariableName()+".setDirection("+res.getVariableName()+");");
+	}*/
 
     @Override
     public String toString() {

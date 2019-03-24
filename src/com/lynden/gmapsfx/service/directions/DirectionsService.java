@@ -47,7 +47,7 @@ public class DirectionsService extends JavascriptObject{
                 .append(req.getVariableName())
                 .append(", ")
                 .append("function(results, status) {\n")
-                .append("if(status === 'OK'){\n")
+                .append("if(status == 'OK'){\n")
                 .append(renderer.getVariableName())
                 .append(".setDirections(results);\ndocument.")
                 .append(getVariableName())
@@ -58,22 +58,26 @@ public class DirectionsService extends JavascriptObject{
         try{
             getJSObject().eval(r.toString());
         } catch(Throwable t){
-            LOG.error(t.getMessage());
+            LOG.info(t.getMessage());
         }
     }
     
      public void processResponse(Object results, Object status) {
-        LOG.trace("STATUS: {}",status);
+        LOG.info("STATUS: {}",status);
         DirectionStatus pStatus = DirectionStatus.UNKNOWN_ERROR;
         if (status instanceof String && results instanceof JSObject) {
             pStatus = DirectionStatus.valueOf((String) status);
             if (DirectionStatus.OK.equals(pStatus)) {
-                LOG.trace("\n\nResults: " + results);
+                LOG.info("\n\nResults: " + results);
                 DirectionsResult ers = new DirectionsResult((JSObject) results);
                 callback.directionsReceived(ers, pStatus);
                 return;
             }
         }
-        callback.directionsReceived(new DirectionsResult(), pStatus);
+        else {
+        	LOG.info("Status is NOT string: " + results);
+        	callback.directionsReceived(new DirectionsResult(), pStatus);
+        }
+        
     }
 }

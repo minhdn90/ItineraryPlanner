@@ -43,8 +43,8 @@ public class Planner {
 	
 	//private long get(String origin, String dest, long fastestDuration)
 	
-	public void createGraph(ArrayList<String> addresses, int selectedToggle) {
-		String[] placesToGo = addresses.toArray(new String[0]);
+	public void createGraph(ArrayList<String> placeIDs, int selectedToggle) {
+		String[] placesToGo = placeIDs.toArray(new String[0]);
 		int nPlacesToGo = placesToGo.length;
 		Duration minDurations[][] = new Duration[nPlacesToGo][nPlacesToGo];
 		TravelMode fastestMode[][] = new TravelMode[nPlacesToGo][nPlacesToGo];
@@ -69,6 +69,7 @@ public class Planner {
 			}
 			break;
 		default:
+			System.out.println("Unknown type of transport. Shouldn't reach here");
 			break;	
 		}
 		for(TravelMode tm : possibleTravelModes) {

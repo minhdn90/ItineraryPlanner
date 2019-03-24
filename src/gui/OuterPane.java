@@ -20,7 +20,6 @@ public class OuterPane extends BorderPane{
 	    routeTabPane = new TabPane(routeTab);
 	    routeTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 	    this.setRight(routeTabPane);
-	    //mapPane.addListener();
 		this.setCenter(mapPane.getMapView());
 		
 	}

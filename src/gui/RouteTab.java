@@ -43,22 +43,7 @@ public class RouteTab extends Tab{
 			rb.setToggleGroup(group);
 		}
 	}
-	/*
-	private ArrayList<String> getRawAddressList(){
-		ArrayList<String> addressList = new ArrayList<String>();
-		VBox tabContent = (VBox) this.getContent();
-		for(Node n : tabContent.getChildren()) {
-			if(n instanceof HBox) {
-				String userSearchText = ((TextField)(((HBox)n).getChildren()
-										.get(1)))
-										.getText();
-				String searchText = userSearchText.strip();
-				if (!searchText.isEmpty())
-					addressList.add(searchText);
-			}
-		}
-		return addressList;
-	}*/
+	
 	private void updatePlaceList(String address, int whichToBeUpdated) {
 		Place p = new Place(address);
 		placeMap.put(whichToBeUpdated, p);
@@ -119,14 +104,4 @@ public class RouteTab extends Tab{
 	    });
 		++midStopCounter;
 	}
-	/*public ArrayList<String> getDestinationList(){
-		ArrayList<String> addressList = new ArrayList<String>();
-		VBox tabContent = (VBox) this.getContent();
-		for(Node n : tabContent.getChildren()) {
-			if(n instanceof HBox) {
-				addressList.add(((TextField)(((HBox)n).getChildren().get(1))).getText());
-			}
-		}
-		return addressList;
-	}*/
 }

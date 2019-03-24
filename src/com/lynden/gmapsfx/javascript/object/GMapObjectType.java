@@ -60,5 +60,4 @@ public interface GMapObjectType {
     public static final String DIRECTIONS_LEG = "google.maps.DirectionsLeg";
     public static final String DIRECTIONS_ROUTE = "google.maps.DirectionsRoute";
     public static final String DIRECTIONS_GEOCODED_WAYPOINT = "google.maps.DirectionsGeocodedWaypoint";
-    
 }

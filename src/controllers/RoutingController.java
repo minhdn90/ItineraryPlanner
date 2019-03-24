@@ -98,13 +98,13 @@ public class RoutingController {
 		// TODO Auto-generated method stub
 		searchButton.setOnAction(e -> {
 			ArrayList<Place> originalPlaceList = routeTab.getPlaceList();
-        	ArrayList<String> originalAddressList = new ArrayList<String>();
+        	ArrayList<String> originalPlaceIdList = new ArrayList<String>();
         	for(Place p : originalPlaceList) {
-        		originalAddressList.add(p.getAddress());
+        		originalPlaceIdList.add("place_id:" + p.getPlaceID());
         	}
-        	if(!originalAddressList.get(0).isEmpty()
-        		&& !originalAddressList.get(originalAddressList.size()-1).isEmpty()) {
-	        	planner.createGraph(originalAddressList, selectedToggle);
+        	if(!originalPlaceIdList.get(0).isEmpty()
+        		&& !originalPlaceIdList.get(originalPlaceIdList.size()-1).isEmpty()) {
+	        	planner.createGraph(originalPlaceIdList, selectedToggle);
 	        	Itinerary it = planner.createPlan();
 	        	ArrayList<Integer> order = it.getOrder();
 	    		ArrayList<Duration> howlong = it.getTimes();
