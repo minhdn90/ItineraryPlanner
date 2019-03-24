@@ -16,7 +16,6 @@
 package com.lynden.gmapsfx.service.directions;
 import com.lynden.gmapsfx.javascript.JavascriptObject;
 import com.lynden.gmapsfx.javascript.object.GMapObjectType;
-import com.lynden.gmapsfx.javascript.object.GPlace;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
