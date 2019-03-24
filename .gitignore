@@ -1,0 +1,8 @@
+.classpath
+.project
+.settings/
+bin/
+libs/
+src/services/APIKey
+src/services/CustomSearchAPIKey
+
