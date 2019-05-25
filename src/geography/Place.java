@@ -4,17 +4,15 @@ import static java.nio.file.Files.readAllBytes;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.*;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlaceDetailsRequest;
 import com.google.maps.TextSearchRequest;
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceDetails;
 import com.google.maps.model.PlacesSearchResponse;
 import com.google.maps.model.PlacesSearchResult;
 import com.lynden.gmapsfx.javascript.object.LatLong;
-
-import org.joda.time.LocalTime;
 
 public class Place {
 	private String name;
@@ -56,13 +54,12 @@ public class Place {
 			PlaceDetails details = placeDetailsRequest.await();
 			address = details.formattedAddress;
 			name = details.name;
-			//coordinate = details.geometry.location;
 			coordinate = new LatLong(details.geometry.location.lat,
 									 details.geometry.location.lng);
-			/*if(resultPlace.openingHours != null)
+			if(resultPlace.openingHours != null) {
 				timeOpen = resultPlace.openingHours.periods[0].open.time;
-			if(resultPlace.openingHours != null)
-				timeClosed = resultPlace.openingHours.periods[0].close.time;*/
+				timeClosed = resultPlace.openingHours.periods[0].close.time;
+			}
 		} catch (ApiException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

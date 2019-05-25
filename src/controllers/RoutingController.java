@@ -1,7 +1,7 @@
 package controllers;
 
-import org.joda.time.*;
-
+//import org.joda.time.*;
+import java.time.*;
 import com.google.maps.model.Duration;
 import com.google.maps.model.TravelMode;
 import java.util.ArrayList;
@@ -14,6 +14,8 @@ import gui.RouteTab;
 import services.Itinerary;
 import services.Planner;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -28,12 +30,14 @@ public class RoutingController {
     public static final int ANY = 5;
     
     private int selectedToggle = WALKING;
+    private LocalDate departureDate;
+    private LocalTime departureTime;
     
 	private Planner planner;
     private ToggleGroup group;
 
-	private TextField startAddr;
-    private TextField endAddr;
+    private DatePicker departureDates;
+    private ComboBox<String> departureTimes;
     private Button searchButton;
     private Button addStopButton;
     private MapPane mapPane;
@@ -45,12 +49,24 @@ public class RoutingController {
     	this.searchButton = aSearchButton;
     	this.addStopButton = aAddStopButton;
     	this.group = rt.getGroup();
+    	this.departureDates = rt.getDepartureDates();
+    	this.departureTimes = rt.getDepartureTimes();
     	this.mapPane = mp;
     	this.routeTab = rt;
     	setupSearchButton();
     	setupAddStopButton();
     	setupLabels();
     	setupToggle();
+    	setupDateTime();
+    }
+
+    private void setupDateTime() {
+    	departureDates.valueProperty().addListener(li -> {
+    		departureDate = departureDates.getValue();
+    	});
+    	departureTimes.valueProperty().addListener(li -> {
+    		departureTime = LocalTime.parse(departureTimes.getValue());
+    	});
     }
 
 	private void setupToggle() {
@@ -104,7 +120,7 @@ public class RoutingController {
         	}
         	if(!originalPlaceIdList.get(0).isEmpty()
         		&& !originalPlaceIdList.get(originalPlaceIdList.size()-1).isEmpty()) {
-	        	planner.createGraph(originalPlaceIdList, selectedToggle);
+	        	planner.createGraph(originalPlaceIdList, selectedToggle, departureDate, departureTime);
 	        	Itinerary it = planner.createPlan();
 	        	ArrayList<Integer> order = it.getOrder();
 	    		ArrayList<Duration> howlong = it.getTimes();

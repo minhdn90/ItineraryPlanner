@@ -1,15 +1,18 @@
 package gui;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import geography.Place;
-import javafx.scene.Node;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -24,11 +27,15 @@ public class RouteTab extends Tab{
     public ToggleGroup getGroup() {
 		return group;
 	}
-    private TextField startAddr;
-    private TextField endAddr;
-    private Button searchButton;
-    private Button addStopButton;
-    private static int midStopCounter = 0;
+    private DatePicker departureDates;
+    public DatePicker getDepartureDates() {
+		return departureDates;
+	}
+	private ComboBox<String> departureTimes;
+    public ComboBox<String> getDepartureTimes() {
+		return departureTimes;
+	}
+	private static int midStopCounter = 0;
 	private static final int MAX_MID_STOPS = 5;
 	private Map<Integer, Place> placeMap;
 	public ArrayList<Place> getPlaceList() {
@@ -38,10 +45,16 @@ public class RouteTab extends Tab{
 		}
 		return validPlaceList;
 	}
+	
 	private void setupToggle(List<RadioButton> radioButtons) {
 		for(RadioButton rb : radioButtons) {
 			rb.setToggleGroup(group);
 		}
+	}
+
+	private void setupDateTime(ComboBox<String> time, DatePicker calendar) {
+		departureTimes = time;
+		departureDates = calendar;
 	}
 	
 	private void updatePlaceList(String address, int whichToBeUpdated) {
@@ -88,6 +101,23 @@ public class RouteTab extends Tab{
 	    for (RadioButton rb : transportOptions) {
 	    	v.getChildren().add(rb);
 	    }
+	    
+	    HBox departureTimeBox = new HBox();
+	    departureTimeBox.getChildren().add(new Label("Depart before: "));
+	    ObservableList<String> departureHours = FXCollections.observableArrayList(
+	    		 "00:00", "01:00", "02:00", "03:00", "04:00", "05:00",
+	    		 "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
+	    		 "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
+	    		 "18:00", "19:00", "20:00", "21:00", "22:00", "23:00");
+	    ComboBox<String> departureBefore = new ComboBox<String>(departureHours);
+	    departureTimeBox.getChildren().add(departureBefore);
+	    departureTimeBox.setSpacing(20);
+	    v.getChildren().add(departureTimeBox);
+	    
+	    DatePicker travelDate = new DatePicker();
+	    v.getChildren().add(travelDate);
+	    setupDateTime(departureBefore, travelDate);
+	    
 	    this.setContent(v);
 	}
 	public void addAStop(HBox aBox) {

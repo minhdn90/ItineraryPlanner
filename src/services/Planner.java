@@ -1,8 +1,10 @@
 package services;
-import java.nio.file.Paths;
-import org.joda.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.DistanceMatrixApi;
@@ -14,7 +16,6 @@ import com.google.maps.model.DirectionsRoute;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.Duration;
 import com.google.maps.model.TravelMode;
-import static java.nio.file.Files.readAllBytes;
 
 import com.lynden.gmapsfx.service.directions.DirectionsRenderer;
 import com.lynden.gmapsfx.service.directions.DirectionsRequest;
@@ -41,9 +42,7 @@ public class Planner {
 		graph = new MapGraph();
 	}
 	
-	//private long get(String origin, String dest, long fastestDuration)
-	
-	public void createGraph(ArrayList<String> placeIDs, int selectedToggle) {
+	public void createGraph(ArrayList<String> placeIDs, int selectedToggle, LocalDate departureDate, LocalTime departureTime) {
 		String[] placesToGo = placeIDs.toArray(new String[0]);
 		int nPlacesToGo = placesToGo.length;
 		Duration minDurations[][] = new Duration[nPlacesToGo][nPlacesToGo];
@@ -80,6 +79,11 @@ public class Planner {
 			distanceMatrixReq.origins(placesToGo);
 			distanceMatrixReq.destinations(placesToGo);
 			distanceMatrixReq.mode(tm);
+			
+			LocalDateTime ldt = java.time.LocalDateTime.of(departureDate, departureTime);
+			Instant instant = ldt.atZone(java.time.ZoneId.of("Europe/London")).toInstant();
+			distanceMatrixReq.departureTime(instant);
+
 			try {
 				DistanceMatrix distanceMatrix = distanceMatrixReq.await();
 				for (int i = 0; i < nPlacesToGo; ++i) {
@@ -111,37 +115,13 @@ public class Planner {
 			
 		}
 		
-		/*try {
-			for (int i = 0; i < placesToGo.length; ++i) {
-				for (int j = 0; j < placesToGo.length; ++j) {
-					if(i !=j ) {
-						GeoApiContext context = new GeoApiContext.Builder().apiKey(apiKey).build();
-						DirectionsApiRequest directionReq = new DirectionsApiRequest(context);
-						directionReq.origin(placesToGo[i]);
-						directionReq.destination(placesToGo[j]);
-						directionReq.mode(fastestMode[i][j]);
-						DirectionsResult dirResults = directionReq.await();
-						fastestRoute[i][j] = dirResults.routes[0];
-					}
-				}
-			}
-			
-		} catch (ApiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		graph.setFastestTimes(minDurations);
 		graph.setFastestTransport(fastestMode);
 		//graph.setFastestDirections(fastestRoute);
 	}
 	
 	public Itinerary createPlan() {
+		
 		return graph.getItinerary();
 	}
 	
