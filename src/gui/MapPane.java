@@ -1,6 +1,8 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -90,14 +92,19 @@ public class MapPane extends TabPane implements MapComponentInitializedListener,
 		}
 	}
 	
-	public void displayPlan(ArrayList<Place> orderedPlaces, ArrayList<TravelMode> travelModes) {
+	public void displayPlan(ArrayList<Place> orderedPlaces, ArrayList<TravelMode> travelModes, LocalDate departureDate, LocalTime departureTime) {
 		for (int i = 0; i < orderedPlaces.size()-1; ++i) {
 			LatLong latlongOrigin = orderedPlaces.get(i).getCoordinate();
 			LatLong latlongDestination = orderedPlaces.get(i+1).getCoordinate();
 			DirectionsRequest dirReq = new DirectionsRequest(latlongOrigin,
 															 latlongDestination,
 															 convertFromGGTravelMode(travelModes.get(i)),
-															 false);
+															 false,
+															 departureDate,
+															 departureTime);
+			//DirectionsRequest dirReq = new DirectionsRequest(latlongOrigin, latlongDestination,
+			//		convertFromGGTravelMode(travelModes.get(i)), false);
+			
 			DirectionsRenderer dirRenderer = new DirectionsRenderer(true, map, mapView.getDirec());
 			dirRenderer.setSuppressMarkers(true);
 			directionsService.getRoute(dirReq, this, dirRenderer);

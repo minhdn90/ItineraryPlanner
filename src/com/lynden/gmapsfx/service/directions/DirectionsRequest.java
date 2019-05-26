@@ -17,6 +17,11 @@ package com.lynden.gmapsfx.service.directions;
 import com.lynden.gmapsfx.javascript.JavascriptObject;
 import com.lynden.gmapsfx.javascript.object.GMapObjectType;
 import com.lynden.gmapsfx.javascript.object.LatLong;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +76,15 @@ public class DirectionsRequest extends JavascriptObject{
         this(addressOrigin, null, addressDestination, null, travelModes, null, waypoints, provideRouteAlternatives);
     }
     
+    public DirectionsRequest(LatLong latLongOrigin, LatLong latLongDestination, TravelModes travelModes,
+    						boolean provideRouteAlternatives, LocalDate departureDate, LocalTime departureTime){
+ 
+        this(null, latLongOrigin, null, latLongDestination, travelModes,
+        		(travelModes == TravelModes.TRANSIT)? new TransitOptions(LocalDateTime.of(departureDate, departureTime)) : null,
+        		(travelModes == TravelModes.DRIVING)? new DrivingOptions(LocalDateTime.of(departureDate, departureTime)): null,
+        				null, provideRouteAlternatives);
+    }
+    
     public DirectionsRequest(String addressOrigin, LatLong latLongOrigin, 
             String addressDestination, LatLong latLongDestination, 
             TravelModes travelmode, 
@@ -81,7 +95,85 @@ public class DirectionsRequest extends JavascriptObject{
         super(GMapObjectType.DIRECTIONS_REQUESTS, convertToJavascriptString(addressOrigin, latLongOrigin, addressDestination, latLongDestination, travelmode, drivingOptions, waypoints, provideRouteAlternatives));
     }
     
-    private static String convertToJavascriptString(String addressOrigin, LatLong latLongOrigin, 
+    public DirectionsRequest(String addressOrigin, LatLong latLongOrigin, 
+            String addressDestination, LatLong latLongDestination, 
+            TravelModes travelmode, 
+            // transit options
+            TransitOptions transitOptions,
+            DrivingOptions drivingOptions,
+            //unit system
+            DirectionsWaypoint[] waypoints, boolean provideRouteAlternatives) {
+		// TODO Auto-generated constructor stub
+    	super(GMapObjectType.DIRECTIONS_REQUESTS, convertToJavascriptString(addressOrigin, latLongOrigin, addressDestination, latLongDestination,
+    																		travelmode, transitOptions, drivingOptions,
+    																		waypoints, provideRouteAlternatives));
+	}
+
+	private static String convertToJavascriptString(String addressOrigin, LatLong latLongOrigin,
+			String addressDestination, LatLong latLongDestination, TravelModes travelmode,
+			TransitOptions transitOptions, DrivingOptions drivingOptions, DirectionsWaypoint[] waypoints, boolean provideRouteAlternatives) {
+		// TODO Auto-generated method stub
+		StringBuilder builder = new StringBuilder();
+        builder.append("{");
+
+        boolean something = false;
+        if (addressOrigin != null && latLongOrigin == null) {
+            something = true;
+            builder.append("origin: '").append(addressOrigin).append("'");
+        }
+        if (addressOrigin == null && latLongOrigin != null) {
+            something = true;
+            builder.append("origin: ").append(latLongOrigin.getVariableName());
+        }
+        if (addressDestination != null && latLongDestination == null) {
+            builder.append(something ? ", " : "");
+            builder.append("destination: '").append(addressDestination).append("'");
+            something = true;
+        }
+        if (addressDestination == null && latLongDestination != null) {
+            builder.append(something ? ", " : "");
+            builder.append("destination: ").append(latLongDestination.getVariableName());
+            something = true;
+        }
+        if (travelmode != null) {
+            builder.append(something ? ", " : "");
+            builder.append("travelMode: ").append("google.maps.TravelMode.").append(travelmode.toString());
+            something = true;
+        }
+        if(transitOptions != null) {
+        	builder.append(something ? ", " : "");
+        	builder.append("transitOptions: ").append(transitOptions.getVariableName());
+        	something = true;
+        }
+        if (drivingOptions != null) {
+            builder.append(something ? ", " : "");
+            builder.append("drivingOptions: ").append(drivingOptions.getVariableName());
+            something = true;
+        }
+        if (provideRouteAlternatives) {
+            builder.append(something ? ", " : "");
+            builder.append("provideRouteAlternatives: true");
+            something = true;
+        }
+        if(waypoints != null){
+            builder.append(something ? ", " : "");
+            builder.append("optimizeWaypoints: ");
+            builder.append(opt);
+            builder.append(", ");
+            builder.append("waypoints: [");
+            for(DirectionsWaypoint w : waypoints){
+                something = true;
+                builder.append(w.getVariableName());
+                builder.append(something ? ", " : "");
+            }
+            builder.append("]");
+        }
+        builder.append("}");
+        LOG.info("REQUEST " + builder.toString());
+        return builder.toString();
+	}
+
+	private static String convertToJavascriptString(String addressOrigin, LatLong latLongOrigin, 
             String addressDestination, LatLong latLongDestination, 
             TravelModes travelmode, 
             // transit options
@@ -100,7 +192,7 @@ public class DirectionsRequest extends JavascriptObject{
         }
         if (addressOrigin == null && latLongOrigin != null) {
             something = true;
-            builder.append("origin: ").append(latLongOrigin.getVariableName()).append("");
+            builder.append("origin: ").append(latLongOrigin.getVariableName());
         }
         if (addressDestination != null && latLongDestination == null) {
             builder.append(something ? "," : "");
@@ -108,7 +200,7 @@ public class DirectionsRequest extends JavascriptObject{
         }
         if (addressDestination == null && latLongDestination != null) {
             builder.append(something ? "," : "");
-            builder.append("destination: ").append(latLongDestination.getVariableName()).append("");
+            builder.append("destination: ").append(latLongDestination.getVariableName());
         }
         if (travelmode != null) {
             builder.append(something ? "," : "");

@@ -55,7 +55,8 @@ public interface GMapObjectType {
     public static final String DIRECTIONS_DISPLAY_OPTIONS = "google.maps.DirectionsRendererOptions";
     public static final String DIRECTIONS_REQUESTS = "google.maps.DirectionsRequest";
     public static final String DIRECTIONS_WAYPOINT = "google.maps.DirectionsWaypoint";
-    public static final String DIRECTIONS_OPTIONS = "google.maps.DirectionsOptions";
+    public static final String DRIVING_OPTIONS = "google.maps.DrivingOptions";
+    public static final String TRANSIT_OPTIONS = "google.maps.TransitOptions";
     public static final String DIRECTIONS_STEP = "google.maps.DirectionsStep";
     public static final String DIRECTIONS_LEG = "google.maps.DirectionsLeg";
     public static final String DIRECTIONS_ROUTE = "google.maps.DirectionsRoute";

@@ -1,7 +1,5 @@
 package gui;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +101,7 @@ public class RouteTab extends Tab{
 	    }
 	    
 	    HBox departureTimeBox = new HBox();
-	    departureTimeBox.getChildren().add(new Label("Depart before: "));
+	    departureTimeBox.getChildren().add(new Label("Depart after: "));
 	    ObservableList<String> departureHours = FXCollections.observableArrayList(
 	    		 "00:00", "01:00", "02:00", "03:00", "04:00", "05:00",
 	    		 "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
@@ -114,8 +112,11 @@ public class RouteTab extends Tab{
 	    departureTimeBox.setSpacing(20);
 	    v.getChildren().add(departureTimeBox);
 	    
+	    HBox travelDateBox = new HBox();
+	    travelDateBox.getChildren().add(new Label("Travel Date: "));
 	    DatePicker travelDate = new DatePicker();
-	    v.getChildren().add(travelDate);
+	    travelDateBox.getChildren().add(travelDate);
+	    v.getChildren().add(travelDateBox);
 	    setupDateTime(departureBefore, travelDate);
 	    
 	    this.setContent(v);

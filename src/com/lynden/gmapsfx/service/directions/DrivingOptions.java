@@ -17,7 +17,8 @@ package com.lynden.gmapsfx.service.directions;
 
 import com.lynden.gmapsfx.javascript.JavascriptObject;
 import com.lynden.gmapsfx.javascript.object.GMapObjectType;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  *
@@ -25,18 +26,29 @@ import java.util.Date;
  */
 public class DrivingOptions extends JavascriptObject{
     
-    public DrivingOptions(Date departureTime){
+    public DrivingOptions(LocalDateTime departureTime){
         this(departureTime, TrafficModel.BEST_GUESS);
     }
     
-    public DrivingOptions(Date departureTime, TrafficModel trafficModel){
-        super(GMapObjectType.DIRECTIONS_OPTIONS); 
-        
-        getJSObject().setMember("departureTime", departureTime);
-        
-        if(trafficModel != null){
-            getJSObject().setMember("trafficModel", trafficModel);
+    private static String convertToJavascriptString(LocalDateTime departureTime, TrafficModel trafficModel) {
+    	StringBuilder builder = new StringBuilder();
+    	boolean something = false;
+        builder.append("{");
+        if (departureTime != null) {
+            long milisSinceEpoch = departureTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            builder.append("departureTime: new Date(").append(milisSinceEpoch).append(")");
+            something = true;
         }
+        if(trafficModel != null) {
+        	builder.append(something ? ", " : "");
+        	builder.append("trafficModel: ").append("google.maps.TrafficModel.").append(TrafficModel.BEST_GUESS.toString());
+        }
+        builder.append("}");
+        return builder.toString();
+    }
+    
+    public DrivingOptions(LocalDateTime departureTime, TrafficModel trafficModel){
+        super(GMapObjectType.DRIVING_OPTIONS, convertToJavascriptString(departureTime, trafficModel)); 
     }
         
 }

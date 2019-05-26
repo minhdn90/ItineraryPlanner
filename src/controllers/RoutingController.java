@@ -131,7 +131,7 @@ public class RoutingController {
 	        		//orderedAddressList.add(originalAddressList.get(i));
 	        		orderedPlaceList.add(originalPlaceList.get(i));
 	        	}
-	        	mapPane.displayPlan(orderedPlaceList, travelModes);
+	        	mapPane.displayPlan(orderedPlaceList, travelModes, departureDate, departureTime);
             }
             else {
             	RoutePlanningApp.showErrorAlert("Route Display Error", "Make sure to choose points for both start and destination.");
